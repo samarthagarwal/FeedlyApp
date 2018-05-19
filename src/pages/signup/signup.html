@@ -1,8 +1,5 @@
-<ion-header hidden>
+<ion-header>
   <ion-navbar color="danger">
-    <ion-title>
-      Feedly
-    </ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -17,6 +14,12 @@
   </ion-item>
 
   <ion-grid style="width: 75%;">
+
+    <ion-row class="rowStyle">
+      <ion-icon name="person" color="danger"></ion-icon>
+      <ion-input type="text" placeholder="your name"></ion-input>
+    </ion-row>
+
     <ion-row class="rowStyle">
       <ion-icon name="mail" color="danger"></ion-icon>
       <ion-input type="email" placeholder="your email"></ion-input>
@@ -28,13 +31,13 @@
     </ion-row>
 
     <ion-row>
-      <button ion-button block round outline color="light" style="margin-top: 20px;">Login</button>
+      <button ion-button block round outline color="light" style="margin-top: 20px;">Sign Up</button>
     </ion-row>
 
   </ion-grid>
 
-  <button ion-button block clear color="light" (click)="gotoSignup()">
-    Don't have an account? Sign Up
+  <button ion-button block clear color="light" (click)="goBack()">
+    Already have an account? Log in.
   </button>
 
 

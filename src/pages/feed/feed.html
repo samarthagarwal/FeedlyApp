@@ -1,18 +1,63 @@
-<!--
-  Generated template for the FeedPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>feed</ion-title>
+  <ion-navbar color="danger">
+    <ion-title>Your Feed</ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only clear>
+        <ion-icon name="log-out"></ion-icon>
+      </button>
+    </ion-buttons>
+
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+
+  <ion-row margin class="rowStyle">
+    <button ion-button icon-only color="danger" clear>
+      <ion-icon name="images"></ion-icon>
+    </button>
+
+    <ion-input type="text" placeholder="Say something..."></ion-input>
+
+    <button ion-button icon-only color="danger" clear>
+      <ion-icon name="send"></ion-icon>
+    </button>
+  </ion-row>
+
+  <ion-card>
+
+    <ion-item-divider color="danger">
+      Bob Says
+    </ion-item-divider>
+
+    <ion-item text-wrap>
+      I am so happy and excited about developing Feedly using Ionic and Firebase!
+    </ion-item>
+
+    <ion-row class="bottom-bar">
+      <ion-col>
+        <button ion-button block icon-left clear small color="danger" class="border-right">
+          <ion-icon name="thumbs-up"></ion-icon>
+          <small>12 Likes</small>
+        </button>
+      </ion-col>
+      <ion-col>
+        <button ion-button block icon-left clear small color="danger" class="border-right">
+          <ion-icon name="text"></ion-icon>
+          <small>12 Comments</small>
+        </button>
+      </ion-col>
+      <ion-col>
+        <button ion-button block icon-left clear small color="danger">
+          <small>12 mins ago</small>
+        </button>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
 
 </ion-content>

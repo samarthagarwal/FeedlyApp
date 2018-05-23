@@ -13,6 +13,7 @@ export class FeedPage {
   posts: any[] = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+    this.getPosts();
   }
 
   getPosts(){
@@ -40,6 +41,7 @@ export class FeedPage {
       owner_name: firebase.auth().currentUser.displayName
     }).then((doc) => {
       console.log(doc)
+      this.getPosts();
     }).catch((err) => {
       console.log(err)
     })

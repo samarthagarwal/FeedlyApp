@@ -21,9 +21,9 @@
       <ion-icon name="images"></ion-icon>
     </button>
 
-    <ion-input type="text" placeholder="Say something..."></ion-input>
+    <ion-input type="text" placeholder="Say something..." [(ngModel)]="text"></ion-input>
 
-    <button ion-button icon-only color="danger" clear>
+    <button ion-button icon-only color="danger" clear (click)="post()">
       <ion-icon name="send"></ion-icon>
     </button>
   </ion-row>

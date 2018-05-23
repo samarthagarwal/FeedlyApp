@@ -14,6 +14,22 @@ export class FeedPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
+  getPosts(){
+
+    firebase.firestore().collection("posts").get()
+    .then((docs) => {
+
+      docs.forEach((doc) => {
+        this.posts.push(doc);
+      })
+
+      console.log(this.posts)
+
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
   post(){
 
     firebase.firestore().collection("posts").add({

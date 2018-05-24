@@ -11,6 +11,8 @@ export class FeedPage {
 
   text: string = "";
   posts: any[] = [];
+  pageSize: number = 10;
+  cursor: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.getPosts();
@@ -18,7 +20,25 @@ export class FeedPage {
 
   getPosts(){
 
-    firebase.firestore().collection("posts").orderBy("created", "desc").get()
+    firebase.firestore().collection("posts").orderBy("created", "desc").limit(this.pageSize).get()
+    .then((docs) => {
+
+      docs.forEach((doc) => {
+        this.posts.push(doc);
+      })
+
+      this.cursor = this.posts[this.posts.length - 1];
+
+      console.log(this.posts)
+
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
+  loadMorePosts(event){
+
+    firebase.firestore().collection("posts").orderBy("created", "desc").startAfter(this.cursor).limit(this.pageSize).get()
     .then((docs) => {
 
       docs.forEach((doc) => {
@@ -27,9 +47,18 @@ export class FeedPage {
 
       console.log(this.posts)
 
+      if(docs.size < this.pageSize){
+        // all documents have been loaded
+        event.enable(false);
+      } else {
+        event.complete();
+        this.cursor = this.posts[this.posts.length - 1];
+      }
+
     }).catch((err) => {
       console.log(err)
     })
+
   }
 
   post(){

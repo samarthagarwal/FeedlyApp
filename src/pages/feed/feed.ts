@@ -13,6 +13,7 @@ export class FeedPage {
   posts: any[] = [];
   pageSize: number = 10;
   cursor: any;
+  infiniteEvent: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.getPosts();
@@ -50,6 +51,7 @@ export class FeedPage {
       if(docs.size < this.pageSize){
         // all documents have been loaded
         event.enable(false);
+        this.infiniteEvent = event;
       } else {
         event.complete();
         this.cursor = this.posts[this.posts.length - 1];
@@ -58,6 +60,20 @@ export class FeedPage {
     }).catch((err) => {
       console.log(err)
     })
+
+  }
+
+  refresh(event){
+
+    this.posts = [];
+
+    this.getPosts();
+    
+    if(this.infiniteEvent){
+      this.infiniteEvent.enable(true);
+    }
+
+    event.complete();
 
   }
 

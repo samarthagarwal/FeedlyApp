@@ -9,6 +9,8 @@ import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { FeedPage } from '../pages/feed/feed';
 
+import { Camera } from '@ionic-native/camera';
+
 import firebase from 'firebase';
 
 var config = {
@@ -45,6 +47,7 @@ firebase.firestore().settings({
   providers: [
     StatusBar,
     SplashScreen,
+    Camera,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

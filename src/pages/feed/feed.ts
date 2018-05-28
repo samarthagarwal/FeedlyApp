@@ -3,6 +3,7 @@ import { NavController, NavParams, LoadingController, ToastController } from 'io
 import firebase from 'firebase';
 import moment from 'moment';
 import { LoginPage } from '../login/login';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 @Component({
   selector: 'page-feed',
@@ -16,7 +17,7 @@ export class FeedPage {
   cursor: any;
   infiniteEvent: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController, private camera: Camera) {
     this.getPosts();
   }
 

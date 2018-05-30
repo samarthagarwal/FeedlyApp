@@ -184,4 +184,31 @@ export class FeedPage {
     })
   }
 
+  upload(name: string){
+    let blob;
+    
+    blob = this.b64ToBlob(this.image.split(',')[1], "image/png");
+  }
+
+  b64ToBlob(b64Data, contentType){
+    var byteCharacters = atob(b64Data);
+    var byteArrays = [];
+  
+    for (var offset = 0; offset < byteCharacters.length; offset += 512) {
+      var slice = byteCharacters.slice(offset, offset + 512);
+  
+      var byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+  
+      var byteArray = new Uint8Array(byteNumbers);
+  
+      byteArrays.push(byteArray);
+    }
+      
+    return new Blob(byteArrays, {type: contentType});
+    
+  }
+
 }

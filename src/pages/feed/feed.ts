@@ -118,11 +118,8 @@ export class FeedPage {
       created: firebase.firestore.FieldValue.serverTimestamp(),
       owner: firebase.auth().currentUser.uid,
       owner_name: firebase.auth().currentUser.displayName
-    }).then(async (doc) => {
+    }).then((doc) => {
       console.log(doc)
-
-      if(this.image)
-        await this.upload(doc.id);
       
       this.text = "";
 
@@ -186,45 +183,4 @@ export class FeedPage {
       console.log(err)
     })
   }
-
-  async upload(name: string){
-    let blob;
-    
-    blob = this.b64ToBlob(this.image.split(',')[1], "image/png");
-
-    let storage = firebase.storage();
-
-    let ref = storage.ref("postImages/" + name).put(blob);
-
-    ref.on("state_changed", ()=>{
-      console.log("state changed")
-    }, (err) => {
-      console.log(err)
-    }, () => {
-      console.log(ref.snapshot.downloadURL)
-    });
-
-  }
-
-  b64ToBlob(b64Data, contentType){
-    var byteCharacters = atob(b64Data);
-    var byteArrays = [];
-  
-    for (var offset = 0; offset < byteCharacters.length; offset += 512) {
-      var slice = byteCharacters.slice(offset, offset + 512);
-  
-      var byteNumbers = new Array(slice.length);
-      for (var i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-  
-      var byteArray = new Uint8Array(byteNumbers);
-  
-      byteArrays.push(byteArray);
-    }
-      
-    return new Blob(byteArrays, {type: contentType});
-    
-  }
-
 }

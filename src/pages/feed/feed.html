@@ -45,9 +45,11 @@
       {{ post.data().owner_name }} Says
     </ion-item-divider>
 
-    <ion-item text-wrap>
+    <ion-item text-wrap *ngIf="post.data().text.length > 0">
       {{ post.data().text }}
     </ion-item>
+
+    <img [src]="post.data().image" *ngIf="post.data().image">
 
     <ion-row class="bottom-bar">
       <ion-col>

@@ -118,8 +118,12 @@ export class FeedPage {
       created: firebase.firestore.FieldValue.serverTimestamp(),
       owner: firebase.auth().currentUser.uid,
       owner_name: firebase.auth().currentUser.displayName
-    }).then((doc) => {
+    }).then(async (doc) => {
       console.log(doc)
+
+      if(this.image){
+        await this.upload(doc.id)
+      }
       
       this.text = "";
 
@@ -183,4 +187,26 @@ export class FeedPage {
       console.log(err)
     })
   }
+
+  upload(name: string){
+
+    let ref = firebase.storage().ref("postImages/" + name);
+
+    let uploadTask = ref.putString(this.image.split(',')[1], "base64");
+
+    uploadTask.on("state_changed", (taskSnapshot) => {
+      console.log(taskSnapshot)
+    }, (error) => {
+      console.log(error)
+    }, () =>{
+      console.log("The upload is complete!");
+
+      uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+        console.log(url);
+      })
+
+    })
+
+  }
+
 }

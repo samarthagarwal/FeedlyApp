@@ -22,7 +22,7 @@ export class FeedPage {
     this.getPosts();
   }
 
-  getPosts(){
+  getPosts() {
 
     this.posts = [];
 
@@ -33,7 +33,7 @@ export class FeedPage {
     loading.present();
 
     let query = firebase.firestore().collection("posts").orderBy("created", "desc").limit(this.pageSize);
-    
+
     // query.onSnapshot((snapshot) => {
     //   let changedDocs = snapshot.docChanges();
 
@@ -54,56 +54,56 @@ export class FeedPage {
     // })
 
     query.get()
-    .then((docs) => {
+      .then((docs) => {
 
-      docs.forEach((doc) => {
-        this.posts.push(doc);
+        docs.forEach((doc) => {
+          this.posts.push(doc);
+        })
+
+        loading.dismiss();
+
+        this.cursor = this.posts[this.posts.length - 1];
+
+        console.log(this.posts)
+
+      }).catch((err) => {
+        console.log(err)
       })
-
-      loading.dismiss();
-
-      this.cursor = this.posts[this.posts.length - 1];
-
-      console.log(this.posts)
-
-    }).catch((err) => {
-      console.log(err)
-    })
   }
 
-  loadMorePosts(event){
+  loadMorePosts(event) {
 
     firebase.firestore().collection("posts").orderBy("created", "desc").startAfter(this.cursor).limit(this.pageSize).get()
-    .then((docs) => {
+      .then((docs) => {
 
-      docs.forEach((doc) => {
-        this.posts.push(doc);
+        docs.forEach((doc) => {
+          this.posts.push(doc);
+        })
+
+        console.log(this.posts)
+
+        if (docs.size < this.pageSize) {
+          // all documents have been loaded
+          event.enable(false);
+          this.infiniteEvent = event;
+        } else {
+          event.complete();
+          this.cursor = this.posts[this.posts.length - 1];
+        }
+
+      }).catch((err) => {
+        console.log(err)
       })
-
-      console.log(this.posts)
-
-      if(docs.size < this.pageSize){
-        // all documents have been loaded
-        event.enable(false);
-        this.infiniteEvent = event;
-      } else {
-        event.complete();
-        this.cursor = this.posts[this.posts.length - 1];
-      }
-
-    }).catch((err) => {
-      console.log(err)
-    })
 
   }
 
-  refresh(event){
+  refresh(event) {
 
     this.posts = [];
 
     this.getPosts();
-    
-    if(this.infiniteEvent){
+
+    if (this.infiniteEvent) {
       this.infiniteEvent.enable(true);
     }
 
@@ -111,7 +111,7 @@ export class FeedPage {
 
   }
 
-  post(){
+  post() {
 
     firebase.firestore().collection("posts").add({
       text: this.text,
@@ -121,11 +121,12 @@ export class FeedPage {
     }).then(async (doc) => {
       console.log(doc)
 
-      if(this.image){
+      if (this.image) {
         await this.upload(doc.id)
       }
-      
+
       this.text = "";
+      this.image = undefined;
 
       let toast = this.toastCtrl.create({
         message: "Your post has been created successfully.",
@@ -139,12 +140,12 @@ export class FeedPage {
 
   }
 
-  ago(time){
+  ago(time) {
     let difference = moment(time).diff(moment());
     return moment.duration(difference).humanize();
   }
 
-  logout(){
+  logout() {
 
     firebase.auth().signOut().then(() => {
 
@@ -158,13 +159,13 @@ export class FeedPage {
 
   }
 
-  addPhoto(){
+  addPhoto() {
 
     this.launchCamera();
 
   }
 
-  launchCamera(){
+  launchCamera() {
     let options: CameraOptions = {
       quality: 100,
       sourceType: this.camera.PictureSourceType.CAMERA,
@@ -188,24 +189,40 @@ export class FeedPage {
     })
   }
 
-  upload(name: string){
+  upload(name: string) {
 
-    let ref = firebase.storage().ref("postImages/" + name);
+    return new Promise((resolve, reject) => {
 
-    let uploadTask = ref.putString(this.image.split(',')[1], "base64");
+      let ref = firebase.storage().ref("postImages/" + name);
 
-    uploadTask.on("state_changed", (taskSnapshot) => {
-      console.log(taskSnapshot)
-    }, (error) => {
-      console.log(error)
-    }, () =>{
-      console.log("The upload is complete!");
+      let uploadTask = ref.putString(this.image.split(',')[1], "base64");
 
-      uploadTask.snapshot.ref.getDownloadURL().then((url) => {
-        console.log(url);
+      uploadTask.on("state_changed", (taskSnapshot) => {
+        console.log(taskSnapshot)
+      }, (error) => {
+        console.log(error)
+      }, () => {
+        console.log("The upload is complete!");
+
+        uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+
+          firebase.firestore().collection("posts").doc(name).update({
+            image: url
+          }).then(() => {
+            resolve()
+          }).catch((err) => {
+            reject()
+          })
+
+        }).catch((err) => {
+          reject()
+        })
+
       })
 
     })
+
+
 
   }
 

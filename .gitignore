@@ -20,6 +20,7 @@ npm-debug.log*
 coverage/
 dist/
 node_modules/
+functions/node_modules
 tmp/
 temp/
 hooks/

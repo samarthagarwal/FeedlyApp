@@ -10,9 +10,9 @@ export const updateLikesCount = functions.https.onRequest((request, response) =>
 
     console.log(request.body);
 
-    const postId = request.body.postId;
-    const userId = request.body.userId;
-    const action = request.body.action; // 'like' or 'unlike'
+    const postId = JSON.parse(request.body).postId;
+    const userId = JSON.parse(request.body).userId;
+    const action = JSON.parse(request.body).action; // 'like' or 'unlike'
 
     admin.firestore().collection("posts").doc(postId).get().then((data) => {
 

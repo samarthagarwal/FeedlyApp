@@ -55,7 +55,7 @@
       <ion-col>
         <button ion-button block icon-left clear small color="danger" class="border-right" (click)="like(post)">
           <ion-icon name="thumbs-up"></ion-icon>
-          <small>12 Likes</small>
+          <small>{{ post.data().likesCount || 0 }} Likes</small>
         </button>
       </ion-col>
       <ion-col>

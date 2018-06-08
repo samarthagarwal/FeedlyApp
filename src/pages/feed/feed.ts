@@ -248,11 +248,27 @@ export class FeedPage {
       action: post.data().likes && post.data().likes[firebase.auth().currentUser.uid] == true ? "unlike" : "like"
     }
 
+    let toast = this.toastCtrl.create({
+      message: "Updating like... Please wait."
+    });
+
+    toast.present();
+
     this.http.post("https://us-central1-feedlyapp-9df9a.cloudfunctions.net/updateLikesCount", JSON.stringify(body), {
       responseType: "text"
     }).subscribe((data) => {
       console.log(data)
+
+      toast.setMessage("Like updated!");
+      setTimeout(() => {
+        toast.dismiss();
+      }, 3000)
+
     }, (error) => {
+      toast.setMessage("An error has occured. Please try again later.")
+      setTimeout(() => {
+        toast.dismiss();
+      }, 3000)
       console.log(error)
     })
 

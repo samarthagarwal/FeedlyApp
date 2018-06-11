@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, ToastController, ActionSheetController, AlertController } from 'ionic-angular';
 import firebase from 'firebase';
 import moment from 'moment';
 import { LoginPage } from '../login/login';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { HttpClient }  from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'page-feed',
@@ -19,7 +19,7 @@ export class FeedPage {
   infiniteEvent: any;
   image: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController, private camera: Camera, private http: HttpClient) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController, private camera: Camera, private http: HttpClient, private actionSheetCtrl: ActionSheetController, private alertCtrl: AlertController) {
     this.getPosts();
   }
 
@@ -39,19 +39,19 @@ export class FeedPage {
       let changedDocs = snapshot.docChanges();
 
       changedDocs.forEach((change) => {
-        if(change.type == "added"){
+        if (change.type == "added") {
           // TODO
         }
 
-        if(change.type == "modified"){
-          for(let i = 0; i < this.posts.length; i++){
-            if(this.posts[i].id == change.doc.id){
+        if (change.type == "modified") {
+          for (let i = 0; i < this.posts.length; i++) {
+            if (this.posts[i].id == change.doc.id) {
               this.posts[i] = change.doc;
             }
           }
         }
 
-        if(change.type == "removed"){
+        if (change.type == "removed") {
           // TODO
         }
       })
@@ -240,7 +240,7 @@ export class FeedPage {
 
   }
 
-  like(post){
+  like(post) {
 
     let body = {
       postId: post.id,
@@ -271,6 +271,71 @@ export class FeedPage {
       }, 3000)
       console.log(error)
     })
+
+  }
+
+  comment(post) {
+
+    this.actionSheetCtrl.create({
+      buttons: [
+        {
+          text: "View All Comments",
+          handler: () => {
+            //TODO
+          }
+        },
+        {
+          text: "New Comment",
+          handler: () => {
+            
+            this.alertCtrl.create({
+              title: "New Comment",
+              message: "Type your comment",
+              inputs: [
+                { 
+                  name: "comment",
+                  type: "text"
+                }
+              ],
+              buttons: [
+                {
+                  text: "Cancel"
+                },
+                {
+                  text: "Post",
+                  handler: (data) => {
+                    
+                    if(data.comment){
+
+                      firebase.firestore().collection("comments").add({
+                        text: data.comment,
+                        post: post.id,
+                        owner: firebase.auth().currentUser.uid,
+                        owner_name: firebase.auth().currentUser.displayName,
+                        created: firebase.firestore.FieldValue.serverTimestamp()
+                      }).then((doc) => {
+                        this.toastCtrl.create({
+                          message: "Comment posted successfully.",
+                          duration: 3000
+                        }).present();
+                      }).catch((err) => {
+                        this.toastCtrl.create({
+                          message: err.message,
+                          duration: 3000
+                        }).present();
+                      })
+
+                    }
+
+                  }
+                }
+              ]
+            }).present();
+
+          }
+        }
+      ]
+    }).present();
 
   }
 

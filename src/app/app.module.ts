@@ -10,6 +10,7 @@ import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { FeedPage } from '../pages/feed/feed';
+import { CommentsPage } from '../pages/comments/comments';
 
 import { Camera } from '@ionic-native/camera';
 
@@ -33,7 +34,8 @@ firebase.firestore().settings({
     MyApp,
     LoginPage,
     SignupPage,
-    FeedPage
+    FeedPage,
+    CommentsPage
   ],
   imports: [
     BrowserModule,
@@ -45,7 +47,8 @@ firebase.firestore().settings({
     MyApp,
     LoginPage,
     SignupPage,
-    FeedPage
+    FeedPage,
+    CommentsPage
   ],
   providers: [
     StatusBar,

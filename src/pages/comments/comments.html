@@ -28,7 +28,7 @@
       </h2>
       <p>
         <small>
-          {{ comment.data().owner_name }}
+          {{ comment.data().owner_name }} <i> {{ ago(comment.data().created.toDate()) }} ago </i>
         </small>
       </p>
 

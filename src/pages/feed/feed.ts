@@ -24,6 +24,7 @@ export class FeedPage {
     this.getPosts();
   }
 
+
   getPosts() {
 
     this.posts = [];
